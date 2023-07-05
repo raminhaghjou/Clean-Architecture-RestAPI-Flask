@@ -4,3 +4,4 @@ authlib
 flask-injector
 python-dotenv
 jsonpickle
+flask-restful
