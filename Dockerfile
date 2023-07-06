@@ -1,4 +1,5 @@
 FROM python:3.7.11-slim-stretch
+ENV PYTHONUNBUFFERED 1
 LABEL authors="ramin"
 ARG USER_NAME=aiapp
 ARG USER_HOME=/home/${USER_NAME}
@@ -12,11 +13,16 @@ RUN useradd -ms /bin/bash -d ${USER_HOME} ${USER_NAME} \
 
 WORKDIR ${USER_HOME}
 
-ADD ./Pipfile ./Pipfile
-RUN pipenv lock --pre && pipenv sync
+ENV FLASK_APP=main.py
+ENV FLASK_RUN_HOST=0.0.0.0
 
-ADD ./app ./app
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
+ADD . .
+
 ENTRYPOINT [ "gunicorn", "app:app", "-b", "localhost:5000 &" ]
+
+CMD ["flask", "run"]

@@ -3,7 +3,7 @@ import jsonpickle
 from flask import Blueprint, request
 from flask_restful import Resource, Api
 from app.core.services.cities.CityProvinceAppService import CityProvinceAPPService
-from app.infrastructure.presenters.FileCityProvinceRepository import FileCityProvinceRepository
+from app.infrastructure.persistence.FileCityProvinceRepository import FileCityProvinceRepository
 
 class AddCityProvinceAPI(Resource):
     def post(self):
