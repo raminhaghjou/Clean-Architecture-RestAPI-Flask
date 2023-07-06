@@ -5,6 +5,13 @@ from flask_restful import Resource, Api
 from app.core.services.cities.CityProvinceAppService import CityProvinceAPPService
 from app.infrastructure.persistence.FileCityProvinceRepository import FileCityProvinceRepository
 
+
+city_api = Blueprint('rest_api/cities/city', __name__)
+api = Api(city_api)
+api.add_resource(AddCityProvinceAPI, '/cities', endpoint='cities')
+api.add_resource(City, '/cities/<int:id>', endpoint='city')
+
+
 class AddCityProvinceAPI(Resource):
     def post(self):
         city = request.form['city']
@@ -29,8 +36,3 @@ class City(Resource):
         city_province = CityProvinceAPPService(FileCityProvinceRepository())
         return city_province.delete(city_province_id)
 
-
-city_api = Blueprint('rest_api/cities/city', __name__)
-api = Api(city_api)
-api.add_resource(AddCityProvinceAPI, '/cities', endpoint='cities')
-api.add_resource(City, '/cities/<int:id>', endpoint='city')
