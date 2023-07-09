@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 
 
-class CityProvinceRepository(ABC):
+class CityRepository(ABC):
     """
-        This class is the interface for CityProvinceRepository
+        This class is the interface for CityRepository
     """
 
     @abstractmethod
-    def get(self, city_province_id):
+    def get(self, city_id):
         pass
 
     @abstractmethod

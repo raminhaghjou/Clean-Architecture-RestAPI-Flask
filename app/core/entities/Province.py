@@ -1,15 +1,13 @@
 # from app.core.value_objects import CityProvinceId
 
 
-class City:
+class Province:
     """
         Definition of the CityProvince entity
     """
-    city_id: int
-    name: str
     province_id: int
+    name: str
 
-    def __init__(self, city_id, name, province_id):
+    def __init__(self, province_id, name):
         self.name = name
         self.province_id = province_id
-        self.city_id = city_id

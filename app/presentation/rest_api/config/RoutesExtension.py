@@ -1,5 +1,5 @@
 # app/extensions
-from app.presentation.rest_api.cities.CityProvinceAPI import city_api
+from app.presentation.rest_api.cities.CityAPI import city_api
 
 
 def register_routes(app):

@@ -1,7 +1,11 @@
-flask
-werkzeug
-authlib
+flask==2.0.1
+werkzeug==2.3.6
+authlib==1.2.1
 flask-injector
-python-dotenv
-jsonpickle
-flask-restful
+python-dotenv==1.0.0
+jsonpickle==2.2.0
+flask-restful==0.3.10
+mysql-connector-python
+sqlalchemy==1.4.39
+alembic==1.8.1
+mako==1.2.3

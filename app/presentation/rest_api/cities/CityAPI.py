@@ -2,37 +2,36 @@ import jsonpickle
 
 from flask import Blueprint, request
 from flask_restful import Resource, Api
-from app.core.services.cities.CityProvinceAppService import CityProvinceAPPService
-from app.infrastructure.persistence.FileCityProvinceRepository import FileCityProvinceRepository
+from app.core.services.cities.CityAppService import CityAPPService
+from app.infrastructure.persistence.FileCityRepository import FileCityRepository
 
 
-city_api = Blueprint('rest_api/cities/city', __name__)
-api = Api(city_api)
-api.add_resource(AddCityProvinceAPI, '/cities', endpoint='cities')
-api.add_resource(City, '/cities/<int:id>', endpoint='city')
-
-
-class AddCityProvinceAPI(Resource):
+class AddCityAPI(Resource):
     def post(self):
-        city = request.form['city']
-        province = request.form['province']
+        city = request.form['name']
+        province = request.form['province_id']
 
-        city_province = CityProvinceAPPService(FileCityProvinceRepository())
+        city_province = CityAPPService(FileCityRepository())
         a = city_province.add(city, province)
 
         return str(a)
 
 
-class City(Resource):
+class CityAPI(Resource):
     def get(self):
         city_province_id = request.args.get('id')
 
-        city_province = CityProvinceAPPService(FileCityProvinceRepository())
+        city_province = CityAPPService(FileCityRepository())
         return city_province.get(city_province_id)
 
     def delete(self):
         city_province_id = request.args.get('id')
 
-        city_province = CityProvinceAPPService(FileCityProvinceRepository())
+        city_province = CityAPPService(FileCityRepository())
         return city_province.delete(city_province_id)
 
+
+city_api = Blueprint('rest_api/cities/name', __name__)
+api = Api(city_api)
+api.add_resource(AddCityAPI, '/cities', endpoint='cities')
+api.add_resource(CityAPI, '/cities/<int:id>', endpoint='name')
