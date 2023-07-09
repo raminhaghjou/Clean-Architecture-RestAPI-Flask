@@ -3,7 +3,7 @@ import uuid
 from typing import Dict
 from app.core.value_objects import CityProvinceId
 from app.core.services.cities.contract.CityProvinceRepository import CityProvinceRepository
-from app.core.entities.CityProvince import CityProvince
+from app.core.entities.City import CityProvince
 
 
 class FileCityProvinceRepository(CityProvinceRepository):
