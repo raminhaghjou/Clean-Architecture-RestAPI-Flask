@@ -1,7 +1,8 @@
+from app.core.services.cities.contract import CityService
 from app.core.services.cities.contract.CityRepository import CityRepository
 
 
-class CityAPPService:
+class CityAPPService(CityService):
     """
         This class is responsible for creating a new City
     """
