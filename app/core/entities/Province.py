@@ -5,8 +5,8 @@ class Province:
     """
         Definition of the CityProvince entity
     """
-    province_id: int
-    name: str
+    # province_id: int
+    # name: str
 
     def __init__(self, province_id, name):
         self.name = name

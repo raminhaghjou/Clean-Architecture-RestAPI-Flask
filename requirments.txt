@@ -5,7 +5,7 @@ flask-injector
 python-dotenv==1.0.0
 jsonpickle==2.2.0
 flask-restful==0.3.10
-mysql-connector-python
-sqlalchemy==1.4.39
+mysql-connector-python==8.0.33
+sqlalchemy==2.0.18
 alembic==1.8.1
 mako==1.2.3
