@@ -11,7 +11,7 @@ class ProvinceService(ABC):
         pass
 
     @abstractmethod
-    def get(self, province_id: str):
+    def get(self, province_id: int):
         pass
 
 

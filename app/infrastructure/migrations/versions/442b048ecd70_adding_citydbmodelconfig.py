@@ -1,8 +1,8 @@
 """Adding CityDBModelConfig
 
-Revision ID: 8bc6990e755d
+Revision ID: 442b048ecd70
 Revises: 
-Create Date: 2023-07-16 12:00:18.502168
+Create Date: 2023-07-16 15:36:01.489616
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8bc6990e755d'
+revision = '442b048ecd70'
 down_revision = None
 branch_labels = None
 depends_on = None

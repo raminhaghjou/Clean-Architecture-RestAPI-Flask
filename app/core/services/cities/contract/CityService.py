@@ -7,11 +7,11 @@ class CityService(ABC):
     """
 
     @abstractmethod
-    def add(self, city: str, province_id: str):
+    def add(self, city: str, province_id: int):
         pass
 
     @abstractmethod
-    def get(self, city_id: str):
+    def get(self, city_id: int):
         pass
 
 

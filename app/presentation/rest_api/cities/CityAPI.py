@@ -3,7 +3,7 @@ import jsonpickle
 from flask import Blueprint, request
 from flask_restful import Resource, Api
 from app.core.services.cities.CityAppService import CityAPPService
-from app.infrastructure.persistence.FileCityRepository import FileCityRepository
+from app.core.services.cities.contract.CityRepository import CityRepository
 
 
 class AddCityAPI(Resource):
@@ -11,8 +11,9 @@ class AddCityAPI(Resource):
         city = request.form['name']
         province = request.form['province_id']
 
-        city_province = CityAPPService(FileCityRepository())
-        a = city_province.add(city, province)
+        city_province = CityAPPService(CityRepository())
+        a = city_province.add(city, int(province))
+        # a = CityAPPService(CityRepository()).add(city=city, province_id=int(province))
 
         return str(a)
 
@@ -21,7 +22,7 @@ class CityAPI(Resource):
     def get(self):
         city_province_id = request.args.get('id')
 
-        city_province = CityAPPService(FileCityRepository())
+        city_province = CityAPPService(CityRepository())
         return city_province.get(city_province_id)
 
     def delete(self):

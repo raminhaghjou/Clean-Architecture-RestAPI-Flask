@@ -7,11 +7,11 @@ class CityRepository(ABC):
     """
 
     @abstractmethod
-    def get(self, city_id):
+    def get(self, city_id: int):
         pass
 
     @abstractmethod
-    def save(self, city: str, province_id: str):
+    def save(self, city: str, province_id: int):
         pass
 
 

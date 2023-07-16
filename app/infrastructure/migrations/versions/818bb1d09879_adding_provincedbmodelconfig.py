@@ -1,8 +1,8 @@
 """Adding ProvinceDBModelConfig
 
-Revision ID: 2eea18cbb7ea
-Revises: 8bc6990e755d
-Create Date: 2023-07-16 12:01:01.384331
+Revision ID: 818bb1d09879
+Revises: 442b048ecd70
+Create Date: 2023-07-16 15:36:31.474256
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2eea18cbb7ea'
-down_revision = '8bc6990e755d'
+revision = '818bb1d09879'
+down_revision = '442b048ecd70'
 branch_labels = None
 depends_on = None
 

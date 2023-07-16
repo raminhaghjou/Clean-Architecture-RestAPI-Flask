@@ -6,7 +6,7 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(settings=settings)
-    config.scan('app.infrastructure.persistance') # the "important" line
+    config.scan('app.infrastructure.persistence') # the "important" line
     engine = engine_from_config(settings, 'sqlalchemy.')
     initialize_sql(engine)
     # other statements here

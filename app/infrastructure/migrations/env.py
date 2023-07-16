@@ -4,6 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from app.infrastructure.persistence import Base
+from app.infrastructure.persistence.cities import CityDBModelConfig
+from app.infrastructure.persistence.provinces import ProvinceDBModelConfig
 
 from alembic import context
 from BaseConfig import BaseConfig as app_config
