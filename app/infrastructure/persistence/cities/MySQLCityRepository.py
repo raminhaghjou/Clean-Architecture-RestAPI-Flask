@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy.exc import IntegrityError
 from app.core.services.cities.contract.CityRepository import CityRepository
 from app.core.entities.City import City
-from app.infrastructure.migration import DBSession
-from app.infrastructure.migration.CityDBModel import CityDBModel
+from app.infrastructure.persistence import DBSession
+from app.infrastructure.persistence.cities.CityDBModelConfig import CityDBModel
 from app.presentation.rest_api.config.ErrorClasses import UniqueViolationError
 
 
@@ -23,7 +23,7 @@ class MySQLCityRepository(CityRepository):
             province_id=db_row.province_id
         )
 
-    def save(self, name: str, province_id: str) -> Optional[City]:
+    def save(self, name: str, province_id: int) -> Optional[City]:
         """ Create City
         :param name: str
         :return: Optional[City]
@@ -48,7 +48,7 @@ class MySQLCityRepository(CityRepository):
             return self.__db_to_entity(city_db_model)
         return None
 
-    def get(self, city_id: CityId) -> Optional[City]:
+    def get(self, city_id: City.city_id) -> Optional[City]:
         """ Get City by id
         :param city_id: CityId
         :return: Optional[City]

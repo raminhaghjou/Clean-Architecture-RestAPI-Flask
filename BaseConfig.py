@@ -4,12 +4,14 @@ from dotenv import load_dotenv
 
 class BaseConfig:
     load_dotenv(dotenv_path='.env')
+    
+    DEFAULT_PORT_VALUE =  3306
 
-    DB_USER = os.getenv("DATABASE_USER")
-    DB_PASS = os.getenv("DATABASE_PASSWORD")
-    DB_NAME = os.getenv("DATABASE_NAME")
-    DB_HOST = os.getenv("DATABASE_HOST")
-    DB_PORT = os.getenv("DATABASE_PORT")
+    DB_USER = os.getenv("DATABASE_USER", "root")
+    DB_PASS = os.getenv("DATABASE_PASSWORD", "1402")
+    DB_NAME = os.getenv("DATABASE_NAME", "city_province")
+    DB_HOST = os.getenv("DATABASE_HOST", "localhost")
+    DB_PORT = os.getenv("DATABASE_PORT", DEFAULT_PORT_VALUE)
     DB_DRIVER = "mysql+mysqlconnector"
 
     DB_URI = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

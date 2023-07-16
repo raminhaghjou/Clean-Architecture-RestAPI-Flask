@@ -1,10 +1,10 @@
 from typing import Optional
 import uuid
 from sqlalchemy.exc import IntegrityError
-from app.core.services.cities.contract.ProvinceRepository import ProvinceRepository
+from app.core.services.provinces.contract.ProvinceRepository import ProvinceRepository
 from app.core.entities.Province import Province
-from app.infrastructure.migration import DBSession
-from app.infrastructure.migration.ProvinceDBModel import ProvinceDBModel
+from app.infrastructure.persistence import DBSession
+from app.infrastructure.persistence.provinces.ProvinceDBModelConfig import ProvinceDBModel
 from app.presentation.rest_api.config.ErrorClasses import UniqueViolationError
 
 
@@ -46,7 +46,7 @@ class MySQLProvinceRepository(ProvinceRepository):
             return self.__db_to_entity(province_db_model)
         return None
 
-    def get(self, province_id: ProvinceId) -> Optional[Province]:
+    def get(self, province_id: Province.province_id) -> Optional[Province]:
         """ Get Province by id
         :param province_id: ProvinceId
         :return: Optional[Province]
