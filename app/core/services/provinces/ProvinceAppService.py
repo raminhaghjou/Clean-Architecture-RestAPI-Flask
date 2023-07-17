@@ -1,5 +1,6 @@
 from app.core.services.provinces.contract import ProvinceService
 from app.core.services.provinces.contract.ProvinceRepository import ProvinceRepository
+from app.infrastructure.persistence import DBSession
 
 
 class ProvinceAPPService(ProvinceService):

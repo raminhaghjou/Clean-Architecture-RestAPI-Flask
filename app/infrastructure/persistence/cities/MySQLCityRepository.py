@@ -2,23 +2,22 @@ from typing import Optional
 import uuid
 from sqlalchemy.exc import IntegrityError
 from app.core.services.cities.contract.CityRepository import CityRepository
-# from app.core.entities.City import City
+from app.core.entities.City import City
 from app.infrastructure.persistence import DBSession
 from app.infrastructure.persistence.cities.CityDBModelConfig import CityDBModelConfig
 from app.presentation.rest_api.config.ErrorClasses import UniqueViolationError
-from app.infrastructure.persistence.UnitOfWork import UnitOfWork
 
 
 class MySQLCityRepository(CityRepository):
     """ MySQL Repository for City
     """
-    def __init__(self) -> None:
-        self.__session = DBSession
+    def __init__(self, session: DBSession):
+        self.__session = session
 
     def __db_to_entity(
             self, db_row: CityDBModelConfig
-    ) -> Optional[CityDBModelConfig]:
-        return CityDBModelConfig(
+    ) -> Optional[City]:
+        return City(
             city_id=db_row.city_id,
             name=db_row.name,
             province_id=db_row.province_id
@@ -35,11 +34,9 @@ class MySQLCityRepository(CityRepository):
         )
 
         try:
-            with UnitOfWork as uow:
-                with uow.get_session() as session:
-                    session.add(city_db_model)
-                    session.commit()
-                    session.refresh(city_db_model)
+            self.__session.add(city_db_model)
+            self.__session.commit()
+            self.__session.refresh(city_db_model)
         except IntegrityError as exception:
             if "violates unique constraint" in str(exception.orig):
                 raise UniqueViolationError(
@@ -51,7 +48,7 @@ class MySQLCityRepository(CityRepository):
             return self.__db_to_entity(city_db_model)
         return None
 
-    def get(self, city_id: CityDBModelConfig.city_id) -> Optional[CityDBModelConfig]:
+    def get(self, city_id) -> Optional[CityDBModelConfig]:
         """ Get City by id
         :param city_id: CityId
         :return: Optional[City]

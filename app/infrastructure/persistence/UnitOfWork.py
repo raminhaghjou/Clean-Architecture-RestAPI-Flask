@@ -1,10 +1,14 @@
 from contextlib import contextmanager
+from app.core.infra.UnitOfWorkBase import UnitOfWorkBase
+from app.core.services.cities import CityAppService
+from app.core.services.cities.contract import CityRepository
+from app.core.services.provinces.contract import ProvinceRepository
 from app.infrastructure.persistence import DBSession
 
 # Define the unit of work class
-class UnitOfWork:
-    def __init__(self):
-        self.session = None
+class UnitOfWork():
+    def __init__(self, session: DBSession) -> None:
+        self.session = session
     
     def __enter__(self):
         self.session = DBSession()

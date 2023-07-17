@@ -49,7 +49,7 @@ class MySQLProvinceRepository(ProvinceRepository):
             return self.__db_to_entity(province_db_model)
         return None
 
-    def get(self, province_id: Province.province_id) -> Optional[Province]:
+    def get(self, province_id) -> Optional[Province]:
         """ Get Province by id
         :param province_id: ProvinceId
         :return: Optional[Province]

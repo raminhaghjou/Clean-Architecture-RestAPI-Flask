@@ -1,6 +1,6 @@
 from app.core.services.cities.contract import CityService
 from app.core.services.cities.contract.CityRepository import CityRepository
-from app.infrastructure.persistence.cities import MySQLCityRepository
+from app.infrastructure.persistence import DBSession
 
 
 class CityAPPService(CityService.CityService):
@@ -8,8 +8,9 @@ class CityAPPService(CityService.CityService):
         This class is responsible for creating a new City
     """
 
-    def __init__(self, repository: CityRepository):
+    def __init__(self, repository: CityRepository, session: DBSession):
         self.repository = repository
+        self.session = session
 
     def add(self, city, province_id):
         return self.repository.save(city, province_id)
