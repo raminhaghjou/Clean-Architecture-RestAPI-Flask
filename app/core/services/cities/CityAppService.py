@@ -8,9 +8,9 @@ class CityAPPService(CityService.CityService):
         This class is responsible for creating a new City
     """
 
-    def __init__(self, repository: CityRepository, session: DBSession):
+    def __init__(self, repository: CityRepository):
         self.repository = repository
-        self.session = session
+        # self.session = session
 
     def add(self, city, province_id):
         return self.repository.save(city, province_id)

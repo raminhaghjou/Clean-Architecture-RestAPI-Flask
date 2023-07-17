@@ -3,21 +3,25 @@ import jsonpickle
 from flask import Blueprint, request
 from flask_restful import Resource, Api
 from app.core.services.cities.CityAppService import CityAPPService
+from app.core.services.provinces.ProvinceAppService import ProvinceAPPService
 from app.infrastructure.persistence import DBSession
 from app.infrastructure.persistence.UnitOfWork import UnitOfWork
 from app.infrastructure.persistence.cities.MySQLCityRepository import MySQLCityRepository
-from app.infrastructure.persistence.provinces import MySQLProvinceRepository
+from app.infrastructure.persistence.provinces.MySQLProvinceRepository import MySQLProvinceRepository
 
 
 class AddCityAPI(Resource):
     def post(self):
         city = request.form['city']
-        province_id = request.form['province_id']
+        province = request.form['province']
         
         
         city_repository = MySQLCityRepository(DBSession)
-        city_province = CityAPPService(city_repository, DBSession)
-        a = city_province.add(city, int(province_id))
+        province_repository = MySQLProvinceRepository(DBSession)
+        province_service = ProvinceAPPService(province_repository)
+        province_id = province_service.add(province)
+        city_service = CityAPPService(city_repository)
+        a = city_service.add(city, province_id)
         # a = CityAPPService(CityRepository()).add(city=city, province_id=int(province))
 
         return str(a)

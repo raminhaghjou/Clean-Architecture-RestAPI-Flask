@@ -6,14 +6,13 @@ from app.core.entities.Province import Province
 from app.infrastructure.persistence import DBSession
 from app.infrastructure.persistence.provinces.ProvinceDBModelConfig import ProvinceDBModelConfig
 from app.presentation.rest_api.config.ErrorClasses import UniqueViolationError
-from app.infrastructure.persistence.UnitOfWork import UnitOfWork
 
 
 class MySQLProvinceRepository(ProvinceRepository):
     """ MySQL Repository for Province
     """
-    def __init__(self) -> None:
-        self.__session = DBSession
+    def __init__(self, session: DBSession):
+        self.__session = session
 
     def __db_to_entity(
             self, db_row: ProvinceDBModelConfig
@@ -33,11 +32,12 @@ class MySQLProvinceRepository(ProvinceRepository):
         )
 
         try:
-            with UnitOfWork as uow:
-                with uow.get_session() as session:
-                    session.add(province_db_model)
-                    session.commit()
-                    session.refresh(province_db_model)
+            self.__session.add(province_db_model)
+            self.__session.flush()
+            self.__session.refresh(province_db_model)
+            # self.__session.commit()
+            # self.__session.refresh(province_db_model)
+            return province_db_model.province_id
         except IntegrityError as exception:
             if "violates unique constraint" in str(exception.orig):
                 raise UniqueViolationError(

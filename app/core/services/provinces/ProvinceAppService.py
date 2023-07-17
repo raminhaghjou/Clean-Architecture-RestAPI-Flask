@@ -3,7 +3,7 @@ from app.core.services.provinces.contract.ProvinceRepository import ProvinceRepo
 from app.infrastructure.persistence import DBSession
 
 
-class ProvinceAPPService(ProvinceService):
+class ProvinceAPPService(ProvinceService.ProvinceService):
     """
         This class is responsible for creating a new City
     """
