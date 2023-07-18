@@ -25,8 +25,8 @@ class MySQLProvinceRepository(ProvinceRepository):
         
     def exits_name(self, province):
         result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.name == province).first()
-        result = self.__session.query(literal(True)).filter(result).scalar()
-        if result is None:
+        result = self.__session.query(result.exists()).scalar()
+        if result is False:
             return False
         else: return True
 

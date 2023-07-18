@@ -1,10 +1,12 @@
 
 from flask import Blueprint, jsonify, make_response, request
-from flask_restful import Resource, Api
+from flask_restful import Api, Resource
+
 from app.core.services.cities.CityAppService import CityAPPService
 from app.infrastructure.persistence import DBSession
+from app.infrastructure.persistence.cities.MySQLCityRepository import \
+    MySQLCityRepository
 from app.infrastructure.persistence.UnitOfWork import UnitOfWork
-from app.infrastructure.persistence.cities.MySQLCityRepository import MySQLCityRepository
 
 
 class AddCityAPI(Resource):
@@ -12,8 +14,9 @@ class AddCityAPI(Resource):
         city = request.get_json()['city']
         province_id = request.get_json()['province_id']
         
+        uow = UnitOfWork(DBSession)
         city_repository = MySQLCityRepository(DBSession)
-        city_service = CityAPPService(city_repository)
+        city_service = CityAPPService(city_repository, uow)
         city_id = city_service.add(city, province_id)
         
         response = make_response(

@@ -1,6 +1,7 @@
 from typing import Optional
 import uuid
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import literal
 from app.core.services.cities.contract.CityRepository import CityRepository
 from app.core.entities.City import City
 from app.infrastructure.persistence import DBSession
@@ -22,6 +23,13 @@ class MySQLCityRepository(CityRepository):
             name=db_row.name,
             province_id=db_row.province_id
         )
+    
+    def exits_name(self, city):
+        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city).first()
+        # result = self.__session.query(literal(True)).filter(result).scalar()
+        if result is None:
+            return False
+        else: return True
 
     def save(self, name: str, province_id: int) -> Optional[CityDBModelConfig]:
         """ Create City
