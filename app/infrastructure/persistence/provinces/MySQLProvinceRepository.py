@@ -1,6 +1,7 @@
 from typing import Optional
 import uuid
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import literal
 from app.core.services.provinces.contract.ProvinceRepository import ProvinceRepository
 from app.core.entities.Province import Province
 from app.infrastructure.persistence import DBSession
@@ -21,6 +22,13 @@ class MySQLProvinceRepository(ProvinceRepository):
             province_id=db_row.province_id,
             name=db_row.name
         )
+        
+    def exits_name(self, province):
+        result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.name == province).first()
+        result = self.__session.query(literal(True)).filter(result).scalar()
+        if result is None:
+            return False
+        else: return True
 
     def save(self, name: str) -> Optional[Province]:
         """ Create Province
@@ -31,19 +39,19 @@ class MySQLProvinceRepository(ProvinceRepository):
             name=name
         )
 
-        try:
-            self.__session.add(province_db_model)
-            self.__session.flush()
-            self.__session.refresh(province_db_model)
-            # self.__session.commit()
-            # self.__session.refresh(province_db_model)
-            return province_db_model.province_id
-        except IntegrityError as exception:
-            if "violates unique constraint" in str(exception.orig):
-                raise UniqueViolationError(
-                    "Profession with the same name already exists"
-                ) from exception
-            raise
+        # try:
+        #     # self.__session.add(province_db_model)
+        #     # self.__session.flush()
+        #     # self.__session.refresh(province_db_model)
+        #     # self.__session.commit()
+        #     # self.__session.refresh(province_db_model)
+        #     return province_db_model
+        # except IntegrityError as exception:
+        #     if "violates unique constraint" in str(exception.orig):
+        #         raise UniqueViolationError(
+        #             "Profession with the same name already exists"
+        #         ) from exception
+        #     raise
 
         if province_db_model is not None:
             return self.__db_to_entity(province_db_model)

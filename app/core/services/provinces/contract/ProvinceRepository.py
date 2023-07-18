@@ -13,5 +13,9 @@ class ProvinceRepository(ABC):
     @abstractmethod
     def save(self, province: str):
         pass
+    
+    @abstractmethod
+    def exits_name(self, province: str):
+        pass
 
 

@@ -1,6 +1,6 @@
 # ROOT_Project
 
-from flask import Flask
+from flask import Flask, jsonify
 
 from BaseConfig import BaseConfig
 from app.infrastructure.persistence import initialize_sql

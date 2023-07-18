@@ -33,16 +33,16 @@ class MySQLCityRepository(CityRepository):
             province_id=province_id
         )
 
-        try:
-            self.__session.add(city_db_model)
-            self.__session.commit()
-            self.__session.refresh(city_db_model)
-        except IntegrityError as exception:
-            if "violates unique constraint" in str(exception.orig):
-                raise UniqueViolationError(
-                    "Profession with the same name already exists"
-                ) from exception
-            raise
+        # try:
+        #     self.__session.add(city_db_model)
+        #     self.__session.commit()
+        #     self.__session.refresh(city_db_model)
+        # except IntegrityError as exception:
+        #     if "violates unique constraint" in str(exception.orig):
+        #         raise UniqueViolationError(
+        #             "Profession with the same name already exists"
+        #         ) from exception
+        #     raise
 
         if city_db_model is not None:
             return self.__db_to_entity(city_db_model)

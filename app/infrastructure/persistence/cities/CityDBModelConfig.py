@@ -24,6 +24,5 @@ class CityDBModelConfig(Base):
     province_id : Mapped[int] = mapped_column(Integer, ForeignKey('provinces.province_id'), nullable = False)
     province : Mapped["ProvinceDBModelConfig"] = relationship(back_populates= 'cities')
     
-    # def __init__(self, name, province_id):
-    #     self.name = name
-    #     self.province_id = province_id
+    def __repr__(self):
+        f"{self.__class__.__name__}({self.city_id}, {self.name}, {self.province_id})"

@@ -1,44 +1,59 @@
-import jsonpickle
 
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, make_response, request
 from flask_restful import Resource, Api
 from app.core.services.cities.CityAppService import CityAPPService
-from app.core.services.provinces.ProvinceAppService import ProvinceAPPService
 from app.infrastructure.persistence import DBSession
 from app.infrastructure.persistence.UnitOfWork import UnitOfWork
 from app.infrastructure.persistence.cities.MySQLCityRepository import MySQLCityRepository
-from app.infrastructure.persistence.provinces.MySQLProvinceRepository import MySQLProvinceRepository
 
 
 class AddCityAPI(Resource):
     def post(self):
-        city = request.form['city']
-        province = request.form['province']
-        
+        city = request.get_json()['city']
+        province_id = request.get_json()['province_id']
         
         city_repository = MySQLCityRepository(DBSession)
-        province_repository = MySQLProvinceRepository(DBSession)
-        province_service = ProvinceAPPService(province_repository)
-        province_id = province_service.add(province)
         city_service = CityAPPService(city_repository)
-        a = city_service.add(city, province_id)
-        # a = CityAPPService(CityRepository()).add(city=city, province_id=int(province))
-
-        return str(a)
+        city_id = city_service.add(city, province_id)
+        
+        response = make_response(
+            jsonify(
+                {"id": str(city_id)}
+            ),
+            200,
+        )
+        response.headers["Content-Type"] = "application/json"
+        return response
 
 
 class CityAPI(Resource):
     def get(self):
-        city_province_id = request.args.get('id')
+        city_id = request.get_json()['id']
 
-        city_province = CityAPPService(MySQLCityRepository())
-        return city_province.get(city_province_id)
+        city = CityAPPService(MySQLCityRepository())
+        city = city.get(city_id)
+        response = make_response(
+            jsonify(
+                {"name": str(city)}
+            ),
+            200,
+        )
+        response.headers["Content-Type"] = "application/json"
+        return response
 
     def delete(self):
-        city_province_id = request.args.get('id')
+        city_id = request.get_json()['id']
 
-        city_province = CityAPPService(MySQLCityRepository())
-        return city_province.delete(city_province_id)
+        city = CityAPPService(MySQLCityRepository())
+        city.delete(city_id)
+        response = make_response(
+            jsonify(
+                {"message": "city deleted successfully"}
+            ),
+            200,
+        )
+        response.headers["Content-Type"] = "application/json"
+        return response
 
 
 city_api = Blueprint('rest_api/cities/name', __name__)
