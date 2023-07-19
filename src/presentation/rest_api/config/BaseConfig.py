@@ -7,10 +7,10 @@ class BaseConfig:
     
     DEFAULT_PORT_VALUE =  3306
 
-    DB_USER = os.getenv("DATABASE_USER", "root")
-    DB_PASS = os.getenv("DATABASE_PASSWORD", "1402")
-    DB_NAME = os.getenv("DATABASE_NAME", "city_province")
-    DB_HOST = os.getenv("DATABASE_HOST", "localhost")
+    DB_USER = os.getenv("DATABASE_USER")
+    DB_PASS = os.getenv("DATABASE_PASSWORD")
+    DB_NAME = os.getenv("DATABASE_NAME")
+    DB_HOST = os.getenv("DATABASE_HOST")
     DB_PORT = os.getenv("DATABASE_PORT", DEFAULT_PORT_VALUE)
     DB_DRIVER = "mysql+mysqlconnector"
 
