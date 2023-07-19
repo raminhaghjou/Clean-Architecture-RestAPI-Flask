@@ -25,8 +25,8 @@ class MySQLProvinceRepository(ProvinceRepository):
         
     def exits_name(self, province):
         result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.name == province).first()
-        result = self.__session.query(result.exists()).scalar()
-        if result is False:
+        # result = self.__session.query(result.exists()).scalar()
+        if result is None:
             return False
         else: return True
 
@@ -39,22 +39,9 @@ class MySQLProvinceRepository(ProvinceRepository):
             name=name
         )
 
-        # try:
-        #     # self.__session.add(province_db_model)
-        #     # self.__session.flush()
-        #     # self.__session.refresh(province_db_model)
-        #     # self.__session.commit()
-        #     # self.__session.refresh(province_db_model)
-        #     return province_db_model
-        # except IntegrityError as exception:
-        #     if "violates unique constraint" in str(exception.orig):
-        #         raise UniqueViolationError(
-        #             "Profession with the same name already exists"
-        #         ) from exception
-        #     raise
-
         if province_db_model is not None:
-            return self.__db_to_entity(province_db_model)
+            return province_db_model
+            # return self.__db_to_entity(province_db_model)
         return None
 
     def get(self, province_id) -> Optional[Province]:
@@ -62,7 +49,8 @@ class MySQLProvinceRepository(ProvinceRepository):
         :param province_id: ProvinceId
         :return: Optional[Province]
         """
-        result = self.__session.query(ProvinceDBModelConfig).get(province_id)
+        # result = self.__session.query(ProvinceDBModelConfig).get(province_id)
+        result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.province_id == province_id)
         if result is not None:
-            return self.__db_to_entity(result)
+            return result.first()
         return None

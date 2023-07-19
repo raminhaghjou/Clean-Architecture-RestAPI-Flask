@@ -24,8 +24,8 @@ class MySQLCityRepository(CityRepository):
             province_id=db_row.province_id
         )
     
-    def exits_name(self, city):
-        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city).first()
+    def exits_name(self, city, province_id):
+        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city, CityDBModelConfig.province_id == province_id).first()
         # result = self.__session.query(literal(True)).filter(result).scalar()
         if result is None:
             return False
@@ -41,19 +41,8 @@ class MySQLCityRepository(CityRepository):
             province_id=province_id
         )
 
-        # try:
-        #     self.__session.add(city_db_model)
-        #     self.__session.commit()
-        #     self.__session.refresh(city_db_model)
-        # except IntegrityError as exception:
-        #     if "violates unique constraint" in str(exception.orig):
-        #         raise UniqueViolationError(
-        #             "Profession with the same name already exists"
-        #         ) from exception
-        #     raise
-
         if city_db_model is not None:
-            return self.__db_to_entity(city_db_model)
+            return city_db_model
         return None
 
     def get(self, city_id) -> Optional[CityDBModelConfig]:
@@ -61,7 +50,8 @@ class MySQLCityRepository(CityRepository):
         :param city_id: CityId
         :return: Optional[City]
         """
-        result = self.__session.query(CityDBModelConfig).get(city_id)
+        # result = self.__session.query(CityDBModelConfig).get(city_id)
+        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.city_id == city_id)
         if result is not None:
-            return self.__db_to_entity(result)
+            return result.first()
         return None

@@ -1,6 +1,6 @@
 
-from flask import Blueprint, jsonify, make_response, request
-from flask_restful import Api, Resource
+from flask import Blueprint, jsonify, make_response, request, json
+from flask_restful import Api, Resource, reqparse
 
 from app.core.services.cities.CityAppService import CityAPPService
 from app.infrastructure.persistence import DBSession
@@ -9,10 +9,16 @@ from app.infrastructure.persistence.cities.MySQLCityRepository import \
 from app.infrastructure.persistence.UnitOfWork import UnitOfWork
 
 
+# Define parser and request args
+parser = reqparse.RequestParser()
+
 class AddCityAPI(Resource):
     def post(self):
-        city = request.get_json()['city']
-        province_id = request.get_json()['province_id']
+        parser.add_argument('city', type=str, required=True, help='City is required')
+        parser.add_argument('province_id', type=str, required=True, help='Province_id is required')
+        args = parser.parse_args()
+        city = args['city']
+        province_id = args['province_id']
         
         uow = UnitOfWork(DBSession)
         city_repository = MySQLCityRepository(DBSession)
@@ -30,24 +36,36 @@ class AddCityAPI(Resource):
 
 
 class CityAPI(Resource):
-    def get(self):
-        city_id = request.get_json()['id']
+    def get(self, city_id):
 
-        city = CityAPPService(MySQLCityRepository())
+        uow = UnitOfWork(DBSession)
+        city_repository = MySQLCityRepository(DBSession)
+        city = CityAPPService(city_repository, uow)
         city = city.get(city_id)
-        response = make_response(
-            jsonify(
-                {"name": str(city)}
-            ),
-            200,
-        )
-        response.headers["Content-Type"] = "application/json"
-        return response
+        if city is None:
+            response = make_response(
+                jsonify(
+                    {"message": "Nop for province not found"}
+                ),
+                204,
+            )
+            response.headers["Content-Type"] = "application/json"
+            return response
+        else:
+            response = make_response(
+                jsonify(
+                    {"name": city.name}
+                ),
+                200,
+            )
+            response.headers["Content-Type"] = "application/json"
+            return response
 
-    def delete(self):
-        city_id = request.get_json()['id']
+    def delete(self, city_id):
 
-        city = CityAPPService(MySQLCityRepository())
+        uow = UnitOfWork(DBSession)
+        city_repository = MySQLCityRepository(DBSession)
+        city = CityAPPService(city_repository, uow)
         city.delete(city_id)
         response = make_response(
             jsonify(
@@ -62,4 +80,4 @@ class CityAPI(Resource):
 city_api = Blueprint('rest_api/cities/name', __name__)
 api = Api(city_api)
 api.add_resource(AddCityAPI, '/cities', endpoint='cities')
-api.add_resource(CityAPI, '/cities/<int:id>', endpoint='name')
+api.add_resource(CityAPI, '/cities/<int:city_id>', endpoint='name')
