@@ -15,13 +15,11 @@ class ProvinceAPPService(ProvinceService.ProvinceService):
 
     def add(self, province):
         with self.unitOfWork as uow:
-            if self.repository.exits_name(province) is False:
+            if self.repository.exist_name(province) is False:
                 province_model = self.repository.save(province)
-                uow.session.add(province_model)
-                uow.session.commit()
+                uow.commit()
                 uow.session.refresh(province_model)
                 id = province_model.province_id
-                uow.session.close()
                 return id
             else:
                 raise Exception("Province %s already exists" % province)

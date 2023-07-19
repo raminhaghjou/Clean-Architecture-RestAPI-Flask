@@ -1,8 +1,5 @@
 from contextlib import contextmanager
 from app.core.services.infra.UnitOfWorkBase import UnitOfWorkBase
-from app.core.services.cities import CityAppService
-from app.core.services.cities.contract import CityRepository
-from app.core.services.provinces.contract import ProvinceRepository
 from app.infrastructure.persistence import DBSession
 
 # Define the unit of work class
@@ -20,6 +17,9 @@ class UnitOfWork(UnitOfWorkBase):
         else:
             self.session.commit()
         self.session.close()
+        
+    def commit(self):
+        return self.session.commit()
 
     @contextmanager
     def get_session(self):

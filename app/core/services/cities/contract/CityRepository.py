@@ -14,4 +14,7 @@ class CityRepository(ABC):
     def save(self, city: str, province_id: int):
         pass
 
+    @abstractmethod
+    def exist_name(self, province: str):
+        pass
 

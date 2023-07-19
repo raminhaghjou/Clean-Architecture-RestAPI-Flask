@@ -15,7 +15,7 @@ class ProvinceRepository(ABC):
         pass
     
     @abstractmethod
-    def exits_name(self, province: str):
+    def exist_name(self, province: str):
         pass
 
 

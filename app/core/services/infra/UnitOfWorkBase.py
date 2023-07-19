@@ -10,10 +10,6 @@ class UnitOfWorkBase(ABC):
     def __exit__(self, exc_type, exc_value, traceback):
         self.rollback()
 
-    # @abstractmethod
-    # def commit(self):
-    #     raise NotImplementedError()
-
-    # @abstractmethod
-    # def rollback(self):
-    #     raise NotImplementedError()
+    @abstractmethod
+    def commit(self):
+        raise NotImplementedError()

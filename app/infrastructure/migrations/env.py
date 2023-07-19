@@ -8,7 +8,7 @@ from app.infrastructure.persistence.cities import CityDBModelConfig
 from app.infrastructure.persistence.provinces import ProvinceDBModelConfig
 
 from alembic import context
-from BaseConfig import BaseConfig as app_config
+from app.presentation.rest_api.config.BaseConfig import BaseConfig as app_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

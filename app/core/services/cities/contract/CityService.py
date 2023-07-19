@@ -14,4 +14,3 @@ class CityService(ABC):
     def get(self, city_id: int):
         pass
 
-

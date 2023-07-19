@@ -14,19 +14,9 @@ class MySQLCityRepository(CityRepository):
     """
     def __init__(self, session: DBSession):
         self.__session = session
-
-    def __db_to_entity(
-            self, db_row: CityDBModelConfig
-    ) -> Optional[City]:
-        return City(
-            city_id=db_row.city_id,
-            name=db_row.name,
-            province_id=db_row.province_id
-        )
     
-    def exits_name(self, city, province_id):
+    def exist_name(self, city, province_id):
         result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city, CityDBModelConfig.province_id == province_id).first()
-        # result = self.__session.query(literal(True)).filter(result).scalar()
         if result is None:
             return False
         else: return True
@@ -40,6 +30,8 @@ class MySQLCityRepository(CityRepository):
             name=name,
             province_id=province_id
         )
+        
+        self.__session.add(city_db_model)
 
         if city_db_model is not None:
             return city_db_model
@@ -50,7 +42,6 @@ class MySQLCityRepository(CityRepository):
         :param city_id: CityId
         :return: Optional[City]
         """
-        # result = self.__session.query(CityDBModelConfig).get(city_id)
         result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.city_id == city_id)
         if result is not None:
             return result.first()

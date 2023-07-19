@@ -23,9 +23,8 @@ class MySQLProvinceRepository(ProvinceRepository):
             name=db_row.name
         )
         
-    def exits_name(self, province):
+    def exist_name(self, province):
         result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.name == province).first()
-        # result = self.__session.query(result.exists()).scalar()
         if result is None:
             return False
         else: return True
@@ -38,10 +37,11 @@ class MySQLProvinceRepository(ProvinceRepository):
         province_db_model = ProvinceDBModelConfig(
             name=name
         )
-
+        
+        self.__session.add(province_db_model)
+        
         if province_db_model is not None:
             return province_db_model
-            # return self.__db_to_entity(province_db_model)
         return None
 
     def get(self, province_id) -> Optional[Province]:
@@ -49,7 +49,6 @@ class MySQLProvinceRepository(ProvinceRepository):
         :param province_id: ProvinceId
         :return: Optional[Province]
         """
-        # result = self.__session.query(ProvinceDBModelConfig).get(province_id)
         result = self.__session.query(ProvinceDBModelConfig).filter(ProvinceDBModelConfig.province_id == province_id)
         if result is not None:
             return result.first()
