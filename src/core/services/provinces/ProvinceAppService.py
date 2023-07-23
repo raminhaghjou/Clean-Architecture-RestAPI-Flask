@@ -18,7 +18,7 @@ class ProvinceAPPService(ProvinceService.ProvinceService):
                 province_model = self.repository.save(province)
                 uow.commit()
                 uow.session.refresh(province_model)
-                id = province_model.province_id
+                id = province_model
                 return id
             else:
                 raise Exception("Province %s already exists" % province)

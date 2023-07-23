@@ -4,13 +4,15 @@ from flask_restful import Resource, Api, reqparse
 from src.core.services.provinces.ProvinceAppService import ProvinceAPPService
 from src.infrastructure.persistence import DBSession
 from src.infrastructure.persistence.UnitOfWork import UnitOfWork
-from src.infrastructure.persistence.cities.CityDBModelConfig import CityDBModelConfig
 from src.infrastructure.persistence.provinces.MySQLProvinceRepository import MySQLProvinceRepository
+from src.presentation.rest_api.config.ProvinceSchema import ProvinceSchema
 
 
 # Define parser and request args
 parser = reqparse.RequestParser()
 
+
+province_schema = ProvinceSchema()
 
 class AddProvinceAPI(Resource):
     def post(self):
@@ -24,9 +26,10 @@ class AddProvinceAPI(Resource):
         province_id = province_service.add(province)
 
         response = make_response(
-            jsonify(
-                {"id": str(province_id)}
-            ),
+            jsonify(province_schema.dump(province_id)),
+            # jsonify(
+            #     {"id": str(province_id)}
+            # ),
             200,
         )
         response.headers["Content-Type"] = "application/json"
@@ -40,6 +43,8 @@ class ProvinceAPI(Resource):
         province_repository = MySQLProvinceRepository(DBSession)
         province = ProvinceAPPService(province_repository, uow)
         province = province.get(province_id)
+        p_s = province_schema.dump(province)
+        # print(p_s)
         if province is None:
             response = make_response(
                 jsonify(
@@ -51,9 +56,10 @@ class ProvinceAPI(Resource):
             return response
         else:
             response = make_response(
-                jsonify(
-                    {"name": province.name}
-                ),
+                jsonify(province_schema.load(p_s, session=DBSession)),
+                # jsonify(
+                #     {"name": province.name}
+                # ),
                 200,
             )
             response.headers["Content-Type"] = "application/json"

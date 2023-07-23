@@ -1,6 +1,6 @@
 # ROOT_Project
 
-from flask import Flask, jsonify
+from flask import Flask
 
 from src.presentation.rest_api.config.BaseConfig import BaseConfig
 from src.presentation.rest_api.config.RoutesExtension import register_routes

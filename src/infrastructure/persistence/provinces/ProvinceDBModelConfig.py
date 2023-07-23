@@ -5,8 +5,14 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
+from flask_serialize import FlaskSerialize
 from src.infrastructure.persistence import Base
 
+
+"""create a flask-serialize mixin instance from
+    the factory method `FlaskSerialize`
+"""
+# fs_mixin = FlaskSerialize(Base)
 
 class ProvinceDBModelConfig(Base):
     """

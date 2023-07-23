@@ -18,7 +18,7 @@ class CityAPPService(CityService.CityService):
                 city_model = self.repository.save(city, province_id)
                 uow.commit()
                 uow.session.refresh(city_model)
-                id = city_model.city_id
+                id = city_model
                 return id
             else:
                 raise Exception("City %s already exists" % city)
