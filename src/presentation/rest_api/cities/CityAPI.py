@@ -1,14 +1,16 @@
-
-from flask import Blueprint, jsonify, make_response, request, json
+from dataclasses import asdict
+import json
+from flask import Blueprint, jsonify, make_response, request
 from flask_restful import Api, Resource, reqparse
 
 from src.core.services.cities.CityAppService import CityAPPService
+from src.core.services.cities.dtos.AddCityDTO import AddCityDTO
 from src.infrastructure.persistence import DBSession
-from src.infrastructure.persistence.cities.CityDBModelConfig import CityDBModelConfig
 from src.infrastructure.persistence.cities.MySQLCityRepository import \
     MySQLCityRepository
 from src.infrastructure.persistence.UnitOfWork import UnitOfWork
 from src.presentation.rest_api.config.CitySchema import CitySchema
+from src.presentation.rest_api.config.JsonEncoder import JsonEncoder
 
 
 # Define parser and request args
@@ -22,25 +24,20 @@ class AddCityAPI(Resource):
     
     
     def post(self):
-        parser.add_argument('city', type=str, required=True, help='City is required')
-        parser.add_argument('province_id', type=str, required=True, help='Province_id is required')
-        args = parser.parse_args()
-        city = args['city']
-        province_id = args['province_id']
-        
-        cityModel = CityDBModelConfig()
+        # parser.add_argument('city', type=str, required=True, help='City is required')
+        # parser.add_argument('province_id', type=str, required=True, help='Province_id is required')
+        # args = parser.parse_args()
+        # city = args['city']
+        # province_id = args['province_id']
+        args = request.get_json()
+        city_dto = AddCityDTO(name=args['city'], province_id=args['province_id'])
         uow = UnitOfWork(DBSession)
         city_repository = MySQLCityRepository(DBSession)
         city_service = CityAPPService(city_repository, uow)
-        city_id = city_service.add(city, province_id)
-        c_s = city_schema.dump(city_id)
+        city_id = city_service.add(city_dto)
         
         response = make_response(
-            
-            jsonify(city_schema.load(c_s, session=DBSession)),
-            # jsonify(
-            #     {"id": str(city_id)}
-            # ),
+            str(city_id),
             200,
         )
         response.headers["Content-Type"] = "application/json"
@@ -57,11 +54,9 @@ class CityAPI(Resource):
         if city is None:
             pass
         else:
+            city = asdict(city)
             response = make_response(
-                jsonify(city_schema.dump(city)),
-                # jsonify(
-                #     {"name": city.name}
-                # ),
+                json.dumps(city),
                 200,
             )
             response.headers["Content-Type"] = "application/json"

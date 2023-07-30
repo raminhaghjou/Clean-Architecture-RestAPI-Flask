@@ -1,5 +1,7 @@
+from src.core.entities.City import City
 from src.core.services.cities.contract import CityService
 from src.core.services.cities.contract.CityRepository import CityRepository
+from src.core.services.cities.dtos.AddCityDTO import AddCityDTO
 from src.infrastructure.persistence.UnitOfWork import UnitOfWork
 
 
@@ -12,16 +14,14 @@ class CityAPPService(CityService.CityService):
         self.repository = repository
         self.unitOfWork = unitOfWork
 
-    def add(self, city, province_id):
-        with self.unitOfWork as uow:
-            if self.repository.exist_name(city, province_id) is False:
-                city_model = self.repository.save(city, province_id)
-                uow.commit()
-                uow.session.refresh(city_model)
-                id = city_model
-                return id
-            else:
-                raise Exception("City %s already exists" % city)
+    def add(self, city: AddCityDTO):
+        city_mod = City(name=city.name, province_id=city.province_id)
+        if self.repository.exist_name(city_mod) is False:
+            city_model = self.repository.add(city_mod)
+            self.unitOfWork.commit()
+            return city_model.city_id
+        else:
+            raise Exception("City %s already exists" % city.name)
 
     def get(self, city_id):
         return self.repository.get(city_id)

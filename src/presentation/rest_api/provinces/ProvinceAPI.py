@@ -1,7 +1,10 @@
 
+from dataclasses import asdict
+import json
 from flask import Blueprint, jsonify, make_response, request
 from flask_restful import Resource, Api, reqparse
 from src.core.services.provinces.ProvinceAppService import ProvinceAPPService
+from src.core.services.provinces.dtos.AddProvinceDTO import AddProvinceDTO
 from src.infrastructure.persistence import DBSession
 from src.infrastructure.persistence.UnitOfWork import UnitOfWork
 from src.infrastructure.persistence.provinces.MySQLProvinceRepository import MySQLProvinceRepository
@@ -16,20 +19,18 @@ province_schema = ProvinceSchema()
 
 class AddProvinceAPI(Resource):
     def post(self):
-        parser.add_argument('province', type=str, required=True, help='Province is required')
-        args = parser.parse_args()
-        province = args['province']
-        
+        # parser.add_argument('province', type=str, required=True, help='Province is required')
+        # args = parser.parse_args()
+        # province = args['province']
+        args = request.get_json()
+        province_dto = AddProvinceDTO(name=args['province'])
         uow = UnitOfWork(DBSession)
         province_repository = MySQLProvinceRepository(DBSession)
         province_service = ProvinceAPPService(province_repository, uow)
-        province_id = province_service.add(province)
+        province_id = province_service.add(province_dto)
 
         response = make_response(
-            jsonify(province_schema.dump(province_id)),
-            # jsonify(
-            #     {"id": str(province_id)}
-            # ),
+            str(province_id),
             200,
         )
         response.headers["Content-Type"] = "application/json"
@@ -43,23 +44,12 @@ class ProvinceAPI(Resource):
         province_repository = MySQLProvinceRepository(DBSession)
         province = ProvinceAPPService(province_repository, uow)
         province = province.get(province_id)
-        p_s = province_schema.dump(province)
-        # print(p_s)
         if province is None:
-            response = make_response(
-                jsonify(
-                    {"message": "Nop for province not found"}
-                ),
-                204,
-            )
-            response.headers["Content-Type"] = "application/json"
-            return response
+            pass
         else:
+            province = asdict(province)
             response = make_response(
-                jsonify(province_schema.load(p_s, session=DBSession)),
-                # jsonify(
-                #     {"name": province.name}
-                # ),
+                json.dumps(province),
                 200,
             )
             response.headers["Content-Type"] = "application/json"

@@ -11,7 +11,7 @@ class CityRepository(ABC):
         pass
 
     @abstractmethod
-    def save(self, city: str, province_id: int):
+    def add(self, city: str, province_id: int):
         pass
 
     @abstractmethod

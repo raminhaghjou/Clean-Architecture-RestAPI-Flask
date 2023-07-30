@@ -11,7 +11,7 @@ class ProvinceRepository(ABC):
         pass
 
     @abstractmethod
-    def save(self, province: str):
+    def add(self, province: str):
         pass
     
     @abstractmethod

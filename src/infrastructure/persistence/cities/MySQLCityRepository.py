@@ -1,5 +1,7 @@
 from typing import Optional
+from src.core.entities.City import City
 from src.core.services.cities.contract.CityRepository import CityRepository
+from src.core.services.cities.dtos.GetCityDTO import GetCityDTO
 from src.infrastructure.persistence import DBSession
 from src.infrastructure.persistence.cities.CityDBModelConfig import CityDBModelConfig
 
@@ -10,34 +12,35 @@ class MySQLCityRepository(CityRepository):
     def __init__(self, session: DBSession):
         self.__session = session
     
-    def exist_name(self, city, province_id):
-        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city, CityDBModelConfig.province_id == province_id).first()
+    def exist_name(self, city: City):
+        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.name == city.name, CityDBModelConfig.province_id == city.province_id).first()
         if result is None:
             return False
         else: return True
 
-    def save(self, name: str, province_id: int) -> Optional[CityDBModelConfig]:
+    def add(self, city: City) -> Optional[City]:
         """ Create City
-        :param name: str
-        :return: Optional[City]
+        :param city: City
+        :return: Optional[CityDBModelConfig]
         """
         city_db_model = CityDBModelConfig(
-            name=name,
-            province_id=province_id
+            name=city.name,
+            province_id=city.province_id
         )
         
         self.__session.add(city_db_model)
+        
+        return city_db_model
+        
 
-        if city_db_model is not None:
-            return city_db_model
-        return None
-
-    def get(self, city_id) -> Optional[CityDBModelConfig]:
+    def get(self, city_id):
         """ Get City by id
         :param city_id: CityId
-        :return: Optional[City]
+        :return: Optional[GetCityDTO]
         """
-        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.city_id == city_id)
+        result = self.__session.query(CityDBModelConfig).filter(CityDBModelConfig.city_id == city_id).first()
+        
         if result is not None:
-            return result.first()
+            city_dto = GetCityDTO(result.city_id, result.name, result.province_id)
+            return city_dto
         return None
